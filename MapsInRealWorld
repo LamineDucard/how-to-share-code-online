@@ -1,0 +1,26 @@
+import pandas as pd 
+df1 = pd.read_csv("StockEtablissement_utf8.csv")
+df1= df1['libelleCommuneEtablissement'].value_counts()
+
+df1=df1.to_frame()
+df1.rename({'libelleCommuneEtablissement':'Count'}, axis='columns', inplace=True)
+
+df1=df1.reset_index()
+df1
+france_geo = r'Francedept.geojson' # geojson file
+
+# create a plain world map
+france_map = folium.Map(location=[46.227,2.2137], zoom_start=8)
+france_map.choropleth(
+    geo_data=france_geo,
+    data=df1,
+    columns=['index', 'Count'],
+    key_on='feature.properties.nom',
+    fill_color='YlOrRd', 
+    fill_opacity=0.7, 
+    line_opacity=0.2,
+    legend_name='France'
+)
+
+# display map
+france_map
